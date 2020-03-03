@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
-using MyStock.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,14 +19,16 @@ namespace MyStock
         public void ConfigureServices(IServiceCollection services)
         {
             services.ResolveDataBaseDependencies(Configuration);
+            services.ResolveIdentityDependencies();
+            services.ResolveDependencies(Configuration);
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<MyIdentityDbContext>();
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(opt => {
+                opt.ModelBindingMessageProvider.SetValueMustBeANumberAccessor(x => "deve ser numérico");
+                opt.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor((x) => "valor inválido");
+            });
             services.AddRazorPages();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

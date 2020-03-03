@@ -8,8 +8,7 @@ namespace MyStock.Configurations
 {
     public static class DataBaseConfig
     {
-        public static IServiceCollection 
-        ResolveDataBaseDependencies(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection ResolveDataBaseDependencies(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<MyContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<MyIdentityDbContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
