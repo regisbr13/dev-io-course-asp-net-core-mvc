@@ -1,0 +1,34 @@
+﻿@model ProductViewModel
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="col-md-4">
+    <img src="~/images/@Model.Image" id="imgSrc" class="img-thumbnail"/>
+</div>
+<div class="form-row">
+    <div class="form-group col-md-4">
+        <label asp-for="ImageUpload" class="control-label" style="color:white"></label>
+        <div class="input-group">
+            <div class="custom-file">
+                <input asp-for="ImageUpload" type="file" class="custom-file-input show-img" id="img" aria-describedby="inputGroupFileAddon01">
+                <label id="imgName" class="custom-file-label" for="inputGroupFile01">Escolha uma imagem</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group col-md-6">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group col-md-2">
+        <label class="control-label">R$</label>
+        <input asp-for="Value" class="form-control" id="money"/>
+        <span asp-validation-for="Value" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-row">
+    <div class="form-group col-md-12">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+@model ProviderViewModel
+
+@{
+    ViewData["Title"] = "Novo Fornecedor";
+}
+
+<h4>@ViewData["Title"]</h4>
+<hr />
+<vc:summary-errors></vc:summary-errors>
+<div class="row">
+    <div class="col-md-10">
+        <form asp-action="Create">
+            <div class="form-row">
+                <div class="form-group col-md-8">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="DocumentNumber" class="control-label"></label>
+                    <input asp-for="DocumentNumber" class="form-control" id="document"/>
+                    <span asp-validation-for="DocumentNumber" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <div class="form-check form-check-inline">
+                        <input asp-for="ProviderType" class="form-check-input" type="radio" name="providerType" id="inlineCheckbox1" value="1" checked onclick="formatar(1)">
+                        <label class="form-check-label" for="inlineCheckbox1">Pessoa Física</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input asp-for="ProviderType" class="form-check-input" type="radio" name="providerType" id="inlineCheckbox2" value="2" onclick="formatar(2)">
+                        <label class="form-check-label" for="inlineCheckbox2">Pessoa Jurídica</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <h4>Endereço</h4>
+            <hr>
+            <partial name="_Address">
+            <div class="form-group">
+                <input type="submit" value="Cadastrar" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-info">Voltar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script>
+        $("#document").mask("000.000.000-00")
+        const formatar = (x) => {
+            if (x === 2) {
+                $("#document").mask("00.000.000/0000-00")
+            } else {
+                $("#document").mask("000.000.000-00")
+            }
+        }
+
+        BuscaCep();
+</script>
+}

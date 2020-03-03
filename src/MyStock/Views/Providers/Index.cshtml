@@ -1,0 +1,70 @@
+@model IEnumerable<ProviderViewModel>
+
+@{
+    ViewData["Title"] = "Fornecedores";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr>
+<vc:summary-errors></vc:summary-errors>
+<a asp-action="Create" class="btn btn-primary">Novo Fornecedor</a>
+<p></p>
+<table class="table table-hover table-responsive-md">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.DocumentNumber)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Active)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Address.Street)
+            </th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td class="document-number">
+                @Html.DisplayFor(modelItem => item.DocumentNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Active)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address.Street)
+            </td>
+            <td class="text-right">
+                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id"><i class="fas fa-info-circle"></i></a>
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit"></i></a>
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id"><i class="fas fa-trash-alt"></i></a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script>
+        $(document).ready( function() {
+            $('.document-number').each(function() {
+                console.log($(this).text().trim().length)
+                if ($(this).text().trim().length == 11) {
+                    $(this).mask("000.000.000-00")
+                } else {
+                    $(this).mask("00.000.000/0000-00")
+                }
+            })
+            }
+        )
+</script>
+}

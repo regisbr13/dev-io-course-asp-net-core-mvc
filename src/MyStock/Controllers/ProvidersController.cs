@@ -55,8 +55,6 @@ namespace MyStock.Controllers
         {
             obj.DocumentNumber = obj.DocumentNumber.Replace(".", "").Replace("-", "").Replace("/", "");
             
-            Console.WriteLine(obj.DocumentNumber);
-
             var provider = _mapper.Map<Provider>(obj);
             await _providerService.Insert(provider);
             if (!ValidOperation()) return View(obj);

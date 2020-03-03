@@ -1,0 +1,69 @@
+@model ProviderViewModel
+
+<br>
+<h4>Endereço</h4>
+<hr />
+@if (Model != null)
+{
+    <table class="table table-hover table-responsive-md">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Address.Street)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Address.Number)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Address.Complement)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Address.District)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Address.Cep)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Address.City)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Address.State)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => model.Address.Street)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(model => model.Address.Number)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(model => model.Address.Complement)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(model => model.Address.District)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(model => model.Address.Cep)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.Address.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.Address.State)
+                </td>
+                <td>
+                    <a asp-action="EditAddress" data-modal="" asp-route-providerId="@Model.Id" class="btn btn-info"><i class="fas fa-pencil-alt"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
+

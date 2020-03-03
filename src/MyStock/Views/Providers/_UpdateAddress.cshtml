@@ -1,0 +1,28 @@
+﻿@model ProviderViewModel
+
+@{
+    ViewData["Title"] = "Atualizar Endereço";
+}
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Atualizar Endereço</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<form asp-action="EditAddress">
+    <div class="modal-body">
+        <input type="hidden" asp-for="Address.ProviderId">
+        <input type="hidden" asp-for="Address.Id">
+        <partial name="_Address">
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+</form>
+
+<script>
+    BuscaCep();
+</script>
+

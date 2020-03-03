@@ -22,7 +22,7 @@ namespace MyStock.Business.Services
 
         public async Task Insert(Provider provider)
         {
-            if (!ExecuteValidation(new ProviderValidation(), provider) && !ExecuteValidation(new AddressValidation(), provider.Address)) return;
+            if (!ExecuteValidation(new ProviderValidation(), provider) || !ExecuteValidation(new AddressValidation(), provider.Address)) return;
 
             if (_providerRepository.Search(p => p.DocumentNumber == provider.DocumentNumber).Result.Any())
             {

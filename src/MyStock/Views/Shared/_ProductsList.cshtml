@@ -1,0 +1,50 @@
+@model IEnumerable<ProductViewModel>
+
+<table class="table table-hover table-responsive-md">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">
+                <button class="btn btn-sm btn-info"><i class="far fa-images" onclick="showImgs()" data-toggle="tooltip" data-placement="top" title="mostrar/ocultar imagens"></i></button>
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Value)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Active)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.ProviderId)
+            </th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <th scope="row">
+                <img src="~/images/@item.Image" id="show-img" class="img-thumbnail" alt="imagem do produto" style="width: 80px"/>
+            </th>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Value)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Active)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Provider.Name)
+            </td>
+            <td class="text-right">
+                <a class="btn btn-info" asp-controller="Products" asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="detalhes do produto"><i class="fas fa-info-circle"></i></a>
+                <a class="btn btn-warning" asp-controller="Products" asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="editar produto"><i class="fas fa-edit"></i></a>
+                <a class="btn btn-danger" asp-controller="Products" asp-action="Delete" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="excluir produto"><i class="fas fa-trash-alt"></i></a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

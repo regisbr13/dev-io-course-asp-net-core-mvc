@@ -96,7 +96,7 @@ namespace MyStock.Controllers
         }
 
         [Route("Excluir/{id:guid}")]
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var categoryViewModel = await GetById(id, false);

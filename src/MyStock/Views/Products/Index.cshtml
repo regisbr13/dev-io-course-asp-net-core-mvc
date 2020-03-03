@@ -1,0 +1,12 @@
+@model IEnumerable<ProductViewModel>
+
+@{
+    ViewData["Title"] = "Produtos";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr>
+<vc:summary-errors></vc:summary-errors>
+<a asp-action="Create" class="btn btn-primary">Novo Produto</a>
+<p></p>
+<partial name="_ProductsList">
