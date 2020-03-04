@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using MyStock.Business.Interfaces.Repository;
 using MyStock.Business.Models;
 using MyStock.Data.Context;
+using MyStock.Data.Exceptions;
 
 namespace MyStock.Data.Repository
 {
@@ -50,8 +51,15 @@ namespace MyStock.Data.Repository
 
         public virtual async Task Remove(Guid id)
         {
-            _dbSet.Remove(new TEntity { Id = id });
-            await SaveChanges();
+            try
+            {
+                _dbSet.Remove(new TEntity { Id = id });
+                await SaveChanges();
+            }
+            catch(DbUpdateException)
+            {
+                throw new IntegrityException("Não foi possível exluir:");
+            }
         }
 
         public async Task<int> SaveChanges()

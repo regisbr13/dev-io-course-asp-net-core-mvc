@@ -5,10 +5,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MyStock.Business.Interfaces;
 using MyStock.Business.Interfaces.Repository;
 using MyStock.Business.Interfaces.Services;
 using MyStock.Business.Models;
+using MyStock.Business.Notifications;
+using MyStock.Data.Exceptions;
 using MyStock.Extensions.Authentication;
 using MyStock.ViewModels;
 
@@ -113,13 +116,21 @@ namespace MyStock.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var categoryViewModel = await GetById(id, false);
+            try
+            {
+                var categoryViewModel = await GetById(id, false);
 
-            if (categoryViewModel == null) return NotFound();
+                if (categoryViewModel == null) return NotFound();
 
-            await _categoryService.Remove(id);
-
-            return RedirectToAction(nameof(Index));
+                await _categoryService.Remove(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch(IntegrityException ex)
+            {
+                var categories = _mapper.Map<List<CategoryViewModel>>(await _categoryRepository.FindAll());
+                ViewData.ModelState.AddModelError(string.Empty, $"{ex.Message} existem produtos pertencentes a esta categoria.");
+                return View("Index", categories.OrderBy(p => p.Name));
+            }            
         }
 
         private async Task<CategoryViewModel> GetById(Guid id, bool products)

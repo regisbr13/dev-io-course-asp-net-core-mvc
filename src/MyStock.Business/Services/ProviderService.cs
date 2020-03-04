@@ -35,12 +35,6 @@ namespace MyStock.Business.Services
 
         public async Task Remove(Guid id)
         {
-            if (_providerRepository.FindById(id, true, true).Result.Products.Any())
-            {
-                Notify("O fornecedor possui produtos cadastrados");
-                return;
-            }
-
             await _providerRepository.Remove(id);  
         }
 

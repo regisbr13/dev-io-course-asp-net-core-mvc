@@ -9,6 +9,7 @@ using MyStock.Business.Interfaces;
 using MyStock.Business.Interfaces.Repository;
 using MyStock.Business.Interfaces.Services;
 using MyStock.Business.Models;
+using MyStock.Data.Exceptions;
 using MyStock.Extensions.Authentication;
 using MyStock.ViewModels;
 
@@ -120,16 +121,25 @@ namespace MyStock.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var providerViewModel = await GetById(id, true, false);
+            try
+            {
+                var providerViewModel = await GetById(id, true, false);
 
-            if (providerViewModel == null) return NotFound();
+                if (providerViewModel == null) return NotFound();
 
-            await _providerService.Remove(id);
-            if (!ValidOperation()) return View(providerViewModel);
+                await _providerService.Remove(id);
+                if (!ValidOperation()) return View(providerViewModel);
 
-            TempData["Success"] = "Fornecedor excluído com sucesso.";
+                TempData["Success"] = "Fornecedor excluído com sucesso.";
 
-            return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
+            }
+            catch(IntegrityException ex)
+            {
+                var providers = _mapper.Map<List<ProviderViewModel>>(await _providerRepository.FindAll(true));
+                ViewData.ModelState.AddModelError(string.Empty, $"{ex.Message} existem produtos pertencentes a este fornecedor.");
+                return View("Index", providers.OrderBy(p => p.Name));
+            }
         }
 
         [ClaimsAuthorize("Provider", "EditAddress")]
