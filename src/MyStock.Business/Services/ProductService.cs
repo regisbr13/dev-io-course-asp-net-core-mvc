@@ -21,6 +21,7 @@ namespace MyStock.Business.Services
         {
             if (!ExecuteValidation(new ProductValidation(), product)) return;
 
+            product.Register = DateTime.Now;
             await _productRepository.Insert(product);
         }
 

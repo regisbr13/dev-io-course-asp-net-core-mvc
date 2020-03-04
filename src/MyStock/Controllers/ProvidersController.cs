@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyStock.Business.Interfaces;
 using MyStock.Business.Interfaces.Repository;
 using MyStock.Business.Interfaces.Services;
 using MyStock.Business.Models;
+using MyStock.Extensions.Authentication;
 using MyStock.ViewModels;
 
 namespace MyStock.Controllers
 {
-     [Route("Fornecedores")]
+    [Authorize]
+    [Route("Fornecedores")]
     public class ProvidersController : BaseController
     {
         private readonly IProviderRepository _providerRepository;
@@ -26,6 +29,7 @@ namespace MyStock.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
@@ -33,28 +37,32 @@ namespace MyStock.Controllers
             return View(providers.OrderBy(x => x.Name));
         }
 
+        [AllowAnonymous]
         [Route("Detalhes/{id:guid}")]
         public async Task<IActionResult> Details(Guid id)
         {
             var provider = await GetById(id, true, false);
-            
+
             if (provider == null) return NotFound();
 
             return View(provider);
         }
 
+        [ClaimsAuthorize("Provider", "Add")]
         [Route("Novo")]
         public IActionResult Create()
         {
             return View();
         }
 
+        [ClaimsAuthorize("Provider", "Add")]
         [Route("Novo")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProviderViewModel obj)
         {
             obj.DocumentNumber = obj.DocumentNumber.Replace(".", "").Replace("-", "").Replace("/", "");
-            
+
             var provider = _mapper.Map<Provider>(obj);
             await _providerService.Insert(provider);
             if (!ValidOperation()) return View(obj);
@@ -63,6 +71,7 @@ namespace MyStock.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [ClaimsAuthorize("Provider", "Edit")]
         [Route("Editar/{id:guid}")]
         public async Task<IActionResult> Edit(Guid id)
         {
@@ -73,8 +82,10 @@ namespace MyStock.Controllers
             return View(providerViewModel);
         }
 
+        [ClaimsAuthorize("Provider", "Edit")]
         [Route("Editar/{id:guid}")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, ProviderViewModel obj)
         {
             if (id != obj.Id) return NotFound();
@@ -89,9 +100,10 @@ namespace MyStock.Controllers
 
             TempData["Success"] = "Fornecedor atualizado com sucesso.";
             return RedirectToAction(nameof(Index));
-            
+
         }
 
+        [ClaimsAuthorize("Provider", "Del")]
         [Route("Excluir/{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -102,8 +114,10 @@ namespace MyStock.Controllers
             return View(providerViewModel);
         }
 
+        [ClaimsAuthorize("Provider", "Del")]
         [Route("Excluir/{id:guid}")]
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var providerViewModel = await GetById(id, true, false);
@@ -118,25 +132,28 @@ namespace MyStock.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [ClaimsAuthorize("Provider", "EditAddress")]
         [Route("Editar-endereco/{providerId:guid}")]
-        public async Task<IActionResult> EditAddress(Guid providerId) 
+        public async Task<IActionResult> EditAddress(Guid providerId)
         {
             var provider = await GetById(providerId, true, false);
-            if (provider == null) 
+            if (provider == null)
             {
                 return NotFound();
             }
-            
+
             return PartialView("_UpdateAddress", new ProviderViewModel { Address = provider.Address });
         }
 
+        [ClaimsAuthorize("Provider", "EditAddress")]
         [Route("Editar-endereco/{providerId:guid}")]
         [HttpPost]
-        public async Task<IActionResult> EditAddress(ProviderViewModel viewModel) 
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditAddress(ProviderViewModel viewModel)
         {
             ModelState.Remove("Name");
             ModelState.Remove("DocumentNumber");
-            if (ModelState.IsValid) 
+            if (ModelState.IsValid)
             {
                 await _providerService.UpdateAddress(_mapper.Map<Address>(viewModel.Address));
                 if (!ValidOperation()) return PartialView("_UpdateAddress", viewModel);
@@ -144,24 +161,13 @@ namespace MyStock.Controllers
                 var url = Url.Action("GetAddress", "Providers", new { providerId = viewModel.Address.ProviderId });
                 return Json(new { success = true, url });
             }
-            
-            return PartialView("_UpdateAddress", viewModel);
-        }
-    
-        public async Task<IActionResult> GetAddress(Guid providerId) 
-        {
-            var provider = await GetById(providerId, true, false);
-            if (provider == null) 
-            {
-                return NotFound();
-            }
 
-            return PartialView("_AddressDetails", provider);
+            return PartialView("_UpdateAddress", viewModel);
         }
 
         private async Task<ProviderViewModel> GetById(Guid id, bool address, bool products)
         {
-            if (address) 
+            if (address)
             {
                 if (products)
                     return _mapper.Map<ProviderViewModel>(await _providerRepository.FindById(id, true, true));

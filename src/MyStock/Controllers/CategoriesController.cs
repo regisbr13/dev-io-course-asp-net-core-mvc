@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyStock.Business.Interfaces;
 using MyStock.Business.Interfaces.Repository;
 using MyStock.Business.Interfaces.Services;
 using MyStock.Business.Models;
+using MyStock.Extensions.Authentication;
 using MyStock.ViewModels;
 
 namespace MyStock.Controllers
 {
+    [Authorize]
     [Route("Categorias")]
     public class CategoriesController : BaseController
     {
@@ -26,6 +29,7 @@ namespace MyStock.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
@@ -33,6 +37,7 @@ namespace MyStock.Controllers
             return View(categories.OrderBy(x => x.Name));
         }
 
+        [AllowAnonymous]
         [Route("Detalhes/{id:guid}")]
         public async Task<IActionResult> Details(Guid id)
         {
@@ -44,13 +49,16 @@ namespace MyStock.Controllers
         }
 
         [Route("Nova")]
+        [ClaimsAuthorize("Category", "Add")]
         public IActionResult Create()
         {
             return View();
         }
 
         [Route("Nova")]
+        [ClaimsAuthorize("Category", "Add")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CategoryViewModel obj)
         {
             if (!ModelState.IsValid) return View(obj);
@@ -61,6 +69,7 @@ namespace MyStock.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [ClaimsAuthorize("Category", "Edit")]
         [Route("Editar/{id:guid}")]
         public async Task<IActionResult> Edit(Guid id)
         {
@@ -71,8 +80,10 @@ namespace MyStock.Controllers
             return View(categoryViewModel);
         }
 
+        [ClaimsAuthorize("Category", "Edit")]
         [Route("Editar/{id:guid}")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, CategoryViewModel obj)
         {
             if (id != obj.Id) return NotFound();
@@ -85,6 +96,7 @@ namespace MyStock.Controllers
             
         }
 
+        [ClaimsAuthorize("Category", "Del")]
         [Route("Excluir/{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -95,8 +107,10 @@ namespace MyStock.Controllers
             return View(categoryViewModel);
         }
 
+        [ClaimsAuthorize("Category", "Del")]
         [Route("Excluir/{id:guid}")]
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var categoryViewModel = await GetById(id, false);

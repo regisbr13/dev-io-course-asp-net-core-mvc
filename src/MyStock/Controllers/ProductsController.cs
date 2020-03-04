@@ -4,16 +4,19 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyStock.Business.Interfaces;
 using MyStock.Business.Interfaces.Repository;
 using MyStock.Business.Interfaces.Services;
 using MyStock.Business.Models;
+using MyStock.Extensions.Authentication;
 using MyStock.ViewModels;
 
 namespace MyStock.Controllers
 {
+    [Authorize]
     [Route("Produtos")]
     public class ProductsController : BaseController
     {
@@ -32,6 +35,7 @@ namespace MyStock.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
@@ -39,6 +43,7 @@ namespace MyStock.Controllers
             return View(products.OrderBy(x => x.Name));
         }
 
+        [AllowAnonymous]
         [Route("Detalhes/{id:guid}")]
         public async Task<IActionResult> Details(Guid id)
         {
@@ -49,14 +54,17 @@ namespace MyStock.Controllers
             return View(product);
         }
 
+        [ClaimsAuthorize("Product", "Add")]
         [Route("Novo")]
         public async Task<IActionResult> Create()
         {
             return View(await GenerateFormViewModel(new ProductViewModel { Image = "product.jpg" }));
         }
 
+        [ClaimsAuthorize("Product", "Add")]
         [Route("Novo")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductViewModel obj)
         {
             if (!ModelState.IsValid) return View(await GenerateFormViewModel(obj));
@@ -74,6 +82,7 @@ namespace MyStock.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [ClaimsAuthorize("Product", "Edit")]
         [Route("Editar/{id:guid}")]
         public async Task<IActionResult> Edit(Guid id)
         {
@@ -83,9 +92,11 @@ namespace MyStock.Controllers
 
             return View(await GenerateFormViewModel(productViewModel));
         }
-        
+
+        [ClaimsAuthorize("Product", "Add")]
         [Route("Editar/{id:guid}")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, ProductViewModel obj)
         {
             if (id != obj.Id) return NotFound();
@@ -120,6 +131,7 @@ namespace MyStock.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [ClaimsAuthorize("Product", "Del")]
         [Route("Excluir/{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -130,8 +142,10 @@ namespace MyStock.Controllers
             return View(productViewModel);
         }
 
+        [ClaimsAuthorize("Product", "Del")]
         [Route("Excluir/{id:guid}")]
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var productViewModel = await GetById(id, false, false);
