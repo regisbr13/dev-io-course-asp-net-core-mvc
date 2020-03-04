@@ -39,6 +39,7 @@ namespace MyStock
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseStatusCodePagesWithRedirects("/Erro/{0}");
                 app.UseHsts();
             }
             app.UseHttpsRedirection();

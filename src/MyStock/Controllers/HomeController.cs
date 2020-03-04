@@ -24,10 +24,35 @@ namespace MyStock.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [Route("Erro/{id:length(3,3)}")]
+        public IActionResult Error(int id)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var error = new ErrorViewModel();
+
+            if (id == 500)
+            {
+                error.Title = "Ocorreu um erro!";
+                error.Message = "Tente novamente mais tarde ou contate nosso suporte.";
+                error.Code = id;
+            }
+            else if (id == 404)
+            {
+                error.Title = "Página não encontrada!";
+                error.Message = "A página procurada não existe.";
+                error.Code = id;
+            }
+            else if (id == 403)
+            {
+                error.Title = "Acesso negado!";
+                error.Message = "Você não tem permissão para acessar este conteúdo.";
+                error.Code = id;
+            }
+            else
+            {
+                return StatusCode(404);
+            }
+
+            return View("Error", error);
         }
     }
 }
