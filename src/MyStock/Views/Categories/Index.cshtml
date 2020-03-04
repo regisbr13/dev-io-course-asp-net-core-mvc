@@ -7,7 +7,7 @@
 <h1>@ViewData["Title"]</h1>
 <hr>
 <vc:summary-errors></vc:summary-errors>
-<a asp-action="Create" class="btn btn-primary">Nova Categoria</a>
+<a asp-action="Create" disable-by-claim-name="Category" disable-by-claim-value="Add" data-toggle="tooltip" data-placement="right" class="btn btn-primary">Nova Categoria</a>
 <p></p>
 <table class="table table-hover">
     <thead class="thead-dark">
@@ -25,9 +25,9 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td class="text-right">
-                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id"><i class="fas fa-info-circle"></i></a>
-                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit"></i></a>
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id"><i class="fas fa-trash-alt"></i></a>
+                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="detalhes da categoria"><i class="fas fa-info-circle"></i></a>
+                <a class="btn btn-warning" asp-action="Edit" disable-by-claim-name="Category" disable-by-claim-value="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="editar categoria"><i class="fas fa-edit"></i></a>
+                <a class="btn btn-danger" asp-action="Delete" disable-by-claim-name="Category" disable-by-claim-value="Del" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="excluir categoria"><i class="fas fa-trash-alt"></i></a>
             </td>
         </tr>
 }

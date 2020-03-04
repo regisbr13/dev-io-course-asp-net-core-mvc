@@ -7,6 +7,6 @@
 <h1>@ViewData["Title"]</h1>
 <hr>
 <vc:summary-errors></vc:summary-errors>
-<a asp-action="Create" class="btn btn-primary">Novo Produto</a>
+<a asp-action="Create" disable-by-claim-name="Product" disable-by-claim-value="Add" data-toggle="tooltip" data-placement="right" class="btn btn-primary">Novo Produto</a>
 <p></p>
 <partial name="_ProductsList">

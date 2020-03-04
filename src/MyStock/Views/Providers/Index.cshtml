@@ -7,7 +7,7 @@
 <h1>@ViewData["Title"]</h1>
 <hr>
 <vc:summary-errors></vc:summary-errors>
-<a asp-action="Create" class="btn btn-primary">Novo Fornecedor</a>
+<a asp-action="Create" disable-by-claim-name="Provider" disable-by-claim-value="Add" data-toggle="tooltip" data-placement="right" class="btn btn-primary">Novo Fornecedor</a>
 <p></p>
 <table class="table table-hover table-responsive-md">
     <thead class="thead-dark">
@@ -43,9 +43,9 @@
                 @Html.DisplayFor(modelItem => item.Address.Street)
             </td>
             <td class="text-right">
-                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id"><i class="fas fa-info-circle"></i></a>
-                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit"></i></a>
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id"><i class="fas fa-trash-alt"></i></a>
+                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top"><i class="fas fa-info-circle"></i></a>
+                <a class="btn btn-warning" asp-action="Edit" disable-by-claim-name="Provider" disable-by-claim-value="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="editar fornecedor"><i class="fas fa-edit"></i></a>
+                <a class="btn btn-danger" asp-action="Delete" disable-by-claim-name="Provider" disable-by-claim-value="Del" asp-route-id="@item.Id"><i class="fas fa-trash-alt" data-toggle="tooltip" data-placement="top" title="excluir fornecedor"></i></a>
             </td>
         </tr>
 }

@@ -41,8 +41,8 @@
             </td>
             <td class="text-right">
                 <a class="btn btn-info" asp-controller="Products" asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="detalhes do produto"><i class="fas fa-info-circle"></i></a>
-                <a class="btn btn-warning" asp-controller="Products" asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="editar produto"><i class="fas fa-edit"></i></a>
-                <a class="btn btn-danger" asp-controller="Products" asp-action="Delete" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="excluir produto"><i class="fas fa-trash-alt"></i></a>
+                <a class="btn btn-warning" asp-controller="Products" asp-action="Edit" disable-by-claim-name="Product" disable-by-claim-value="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="editar produto"><i class="fas fa-edit"></i></a>
+                <a class="btn btn-danger" asp-controller="Products" asp-action="Delete" disable-by-claim-name="Product" disable-by-claim-value="Del" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="excluir produto"><i class="fas fa-trash-alt"></i></a>
             </td>
         </tr>
 }
